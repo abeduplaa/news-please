@@ -50,7 +50,8 @@ news-please is an open source, easy-to-use news crawler that extracts structured
           'lxml>=3.3.5',
           'awscli>=1.11.117',
           'hurry.filesize>=0.9',
-          'bs4'
+          'bs4',
+          'cchardet'
       ],
       extras_require={
           ':sys_platform == "win32"': [

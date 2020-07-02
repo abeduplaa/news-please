@@ -579,16 +579,23 @@ class ElasticsearchStorage(ExtractedInformationStorage):
         self.cfg = CrawlerConfig.get_instance()
         self.database = self.cfg.section("Elasticsearch")
 
-        self.es = Elasticsearch(
-            [self.database["host"]],
-            http_auth=(str(self.database["username"]), str(self.database["secret"])),
-            port=self.database["port"],
-            use_ssl=self.database["use_ca_certificates"],
-            verify_certs=self.database["use_ca_certificates"],
-            ca_certs=self.database["ca_cert_path"],
-            client_cert=self.database["client_cert_path"],
-            client_key=self.database["client_key_path"]
-        )
+        if self.database['aws_es']:
+            # credentials = boto3.Session().get_credentials()
+            # awsauth = AWS4Auth(self.database["access_key"], self.database["secret_key"], self.database[", "es", session_token=credentials.token)
+            self.es = Elasticsearch(
+                [self.database["host"]]
+            )
+        else:
+            self.es = Elasticsearch(
+                [self.database["host"]],
+                http_auth=(str(self.database["username"]), str(self.database["secret"])),
+                port=self.database["port"],
+                use_ssl=self.database["use_ca_certificates"],
+                verify_certs=self.database["use_ca_certificates"],
+                ca_certs=self.database["ca_cert_path"],
+                client_cert=self.database["client_cert_path"],
+                client_key=self.database["client_key_path"]
+            )
         self.index_current = self.database["index_current"]
         self.index_archive = self.database["index_archive"]
         self.mapping = self.database["mapping"]
